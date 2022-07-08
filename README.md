@@ -1,2 +1,2 @@
 # YouStream
-Thesis - User Story 1: YoutStram 
+Thesis - User Story 1: YouStream 
