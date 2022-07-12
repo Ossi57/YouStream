@@ -1,0 +1,86 @@
+﻿@page "/videostream"
+@inject IJSRuntime theJavaScriptEngine;
+
+<h1>Video Stream</h1>
+<MudText Typo="Typo.h6">Please select a video to start the live stream:</MudText>
+<div class="d-flex flex-grow-1 gap-4">
+    <MudPaper Class="flex-none d-flex py-8 pa-2" Width="80%" Elevation="0">
+        <MudSelect @bind-Value="@SelectedStream" T="string" SelectedValuesChanged="@SelectionChanged" Label="Available Videos" Variant="Variant.Text">
+            <MudSelectItem Value="@("Big Buck Bunny")" />
+            <MudSelectItem Value="@("Elephant Dream")" />
+            <MudSelectItem Value="@("For Bigger Blazes")" />
+            <MudSelectItem Value="@("Select MP4")" />
+        </MudSelect>
+    </MudPaper>
+    @if (SelectMP4Selected)
+    {
+        <MudPaper Class="flex-none d-flex py-8 pa-2" Width="20%" Elevation="0">
+            <InputFile hidden id="fileInput" OnChange="@LoadFiles"></InputFile>
+
+            <MudButton FullWidth="true" HtmlTag="label"
+                       Variant="Variant.Filled"
+                       Color="Color.Primary"
+                       StartIcon="@Icons.Filled.CloudUpload"
+                       for="fileInput">
+                Select MP4
+            </MudButton>
+        </MudPaper>
+    }
+</div>
+    <BlazoredVideo poster="@Thumbnail" id="videoPlayer" class="w-100"
+                   controls="controls">
+        <source src="@Source" type="video/mp4" />
+    </BlazoredVideo>
+@code{
+    private bool IFrameVisible { get; set; } = false;
+    private string SelectedStream { get; set; } = "";
+    private string Source { get; set; } = "";
+    private string Thumbnail { get; set; }
+    private bool SelectMP4Selected = false;
+
+    private const long MaxStreamSize = 2147483648;
+
+    private async Task LoadFiles(InputFileChangeEventArgs inputFileChangeEventArgs)
+    {
+        var file = inputFileChangeEventArgs.File;
+        var buffers = new byte[file.Size];
+        await file.OpenReadStream(MaxStreamSize).ReadAsync(buffers);
+        Source = $"data:{file.ContentType};base64,{Convert.ToBase64String(buffers)}";
+        loadVideo();
+    }
+
+    private void SelectionChanged()
+    {
+        SelectMP4Selected = false;
+        switch (SelectedStream)
+        {
+            case "Big Buck Bunny":
+                Source = "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4";
+                Thumbnail = "/images/BBB.jpeg";
+                break;
+            case "Elephant Dream":
+                Source = "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4";
+                Thumbnail = "/images/ED.jpeg";
+                break;
+            case "For Bigger Blazes":
+                Source = "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4";
+                Thumbnail = "/images/FBB.jpeg";
+                break;
+            case "Select MP4":
+                Source = "";
+                Thumbnail = "";
+                SelectMP4Selected = true;
+                break;
+            default:
+                Source = "";
+                Thumbnail = "";
+                break;
+        }
+        loadVideo();
+    }
+
+    private void loadVideo()
+    {
+        theJavaScriptEngine.InvokeVoidAsync("loadVideo");
+    }
+}
