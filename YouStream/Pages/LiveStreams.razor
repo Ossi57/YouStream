@@ -41,13 +41,13 @@
         switch (SelectedStream)
         {
             case "Sky News":
-                StreamSource = "https://youtube.com/embed/9Auq9mYxFEE";
+                StreamSource = "https://www.youtube.com/embed/WLlKVD4Aqgw";
                 break;
             case "BBC News":
-                StreamSource = "https://www.youtube.com/embed/VBuZsLSy6cQ";
+                StreamSource = "https://www.youtube.com/embed/w_Ma8oQLmSM";
                 break;
             case "OE24":
-                StreamSource = "https://www.youtube.com/embed/LwaMpZSoAOU";
+                StreamSource = "https://www.youtube.com/embed/tlCJHQ8gaoA";
                 break;
             case "Input URL":
                 StreamSource = "";
@@ -56,6 +56,7 @@
         }
     }
 
+    //convert url to embed url
     private void ExtractURL(string input)
     {
         StreamSource = input.Replace("watch?v=", "embed/");

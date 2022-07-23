@@ -4,7 +4,7 @@ using YouStream.Pages;
 
 namespace YouStream.Test;
 
-public class UnitTest1
+public class PlayerTests
 {
     [Fact]
     public void TestVideoSource()
@@ -27,7 +27,7 @@ public class UnitTest1
     }
 
     [Fact]
-    public void TestIfPlaying()
+    public void TestIfVideoPosterChangesOnSelection()
     {
         //Arrange
         var context = new TestContext();
@@ -38,9 +38,8 @@ public class UnitTest1
 
         //Act
         selectionElement.Click();
-        videoPlayer.Play();
 
         //Assert
-        Assert.True(true);
+        Assert.Equal("/images/ED.jpeg", videoPlayer.GetAttribute("poster"));
     }
 }

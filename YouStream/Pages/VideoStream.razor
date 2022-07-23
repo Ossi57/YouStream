@@ -40,11 +40,13 @@
 
     private const long MaxStreamSize = 2147483648;
 
+    //load file without uploading it to the server or local storage
     private async Task LoadFiles(InputFileChangeEventArgs inputFileChangeEventArgs)
     {
         var file = inputFileChangeEventArgs.File;
         var buffers = new byte[file.Size];
         await file.OpenReadStream(MaxStreamSize).ReadAsync(buffers);
+        //convert file to base64
         Source = $"data:{file.ContentType};base64,{Convert.ToBase64String(buffers)}";
         loadVideo();
     }
@@ -79,6 +81,7 @@
         loadVideo();
     }
 
+    //call load method with JSInterop
     private void loadVideo()
     {
         theJavaScriptEngine.InvokeVoidAsync("loadVideo");
